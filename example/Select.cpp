@@ -14,3 +14,4 @@ int main(int argc,char **argv){
 	printf("%s\n", result.c_str());
 	return 0;
 }
+ 
