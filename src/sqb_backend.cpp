@@ -9,6 +9,9 @@ Sqb::Sqb() :
 Sqb::~Sqb(){
 }
 
+void Sqb::setQueryType(int _queryType){
+	queryType = _queryType;
+}
 void Sqb::setTable(const string &_table){
 	table = _table;
 }
