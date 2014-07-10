@@ -26,8 +26,42 @@ string Sqb::buildConditions(){
 	return query +
 		join( conditions, " AND " );
 }
+string Sqb::buildFieldKeys(){
+	string keys;
+	auto it = fields.begin();
+
+	while( it != fields.end() ){
+		keys += (*it).first;
+
+		if( ++it != fields.end() )
+			keys += ",";
+	}
+
+	return keys;
+}
+string Sqb::buildFieldValues(){
+	string values;
+	auto it = fields.begin();
+
+	while( it != fields.end() ){
+		values += "\'" + (*it).second + "\'";
+
+		if( ++it != fields.end() )
+			values += ",";
+	}
+
+	return values;
+}
+
 string Sqb::buildFrom(){
 	string query = "FROM ";
+
+	query += table;
+	
+	return query;
+}
+string Sqb::buildInto(){
+	string query = "INTO ";
 
 	query += table;
 	
@@ -45,12 +79,12 @@ string Sqb::buildLimit(){
 
 string Sqb::buildSelect(){
 	string query = "SELECT ";
-
 	query +=
 		buildResultColumns() + " " +
 		buildFrom() + " " +
 		buildConditions() + " " +
 		buildLimit();
+
 	return query;
 }
 string Sqb::buildUpdate(){
@@ -60,7 +94,13 @@ string Sqb::buildDelete(){
 	return "";
 }
 string Sqb::buildInsert(){
-	return "";
+	string query = "INSERT ";
+	query +=
+		buildInto() + " (" +
+		buildFieldKeys() + ") VALUES (" +
+		buildFieldValues() +")";
+
+	return query;
 }
 
 string Sqb::build(){
