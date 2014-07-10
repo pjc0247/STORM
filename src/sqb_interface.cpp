@@ -74,10 +74,31 @@ Sqb *Sqb::limit(int limit){
 	return this;
 }
 
+Sqb *Sqb::create(){
+	Sqb *sqb = Sqb::from( table );
+	sqb->setQueryType(
+		QueryType::INSERT );
+
+	return sqb;
+}
+
 string Sqb::find_one(){
 	setLimit( 1 );
 	return buildSelect();
 }
 string Sqb::find_many(){
 	return buildSelect();
+}
+string Sqb::save(){
+	return buildInsert();
+}
+
+void Sqb::set(const string &key, const string &value){
+	fields[key] = value;
+}
+string &Sqb::get(const string &key){
+	return fields[key];
+}
+string &Sqb::operator[](const std::string &key){
+	return fields[key];
 }
