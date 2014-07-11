@@ -13,6 +13,7 @@
 namespace SQB{
 	class Query;
 
+	/* size of MYSQL connection pool */
 	const int POOL_SIZE = 10;
 
 	bool init();
