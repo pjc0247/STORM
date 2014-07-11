@@ -2,34 +2,38 @@
 
 using namespace std;
 
-Sqb::Sqb() :
+namespace SQB{
+
+Query::Query() :
 	nLimit(0),
 	queryType(0){
 }
-Sqb::~Sqb(){
+Query::~Query(){
 }
 
-void Sqb::setQueryType(int _queryType){
+void Query::setQueryType(int _queryType){
 	queryType = _queryType;
 }
-void Sqb::setTable(const string &_table){
+void Query::setTable(const string &_table){
 	table = _table;
 }
-void Sqb::setLimit(int _limit){
+void Query::setLimit(int _limit){
 	nLimit = _limit;
 }
 
-void Sqb::addResultColumn(const string &col){
+void Query::addResultColumn(const string &col){
 	results.push_back( col );
 }
-void Sqb::addCondition(
+void Query::addCondition(
 	const string &col, const string &op, const string &value){
 
 	conditions.push_back(
 		col + " " + op + " " + value );
 }
-void Sqb::addCondition(
+void Query::addCondition(
 	const string &query){
 
 	conditions.push_back( query );
+}
+
 }
