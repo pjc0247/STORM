@@ -15,7 +15,7 @@ SQB::configure("password", "1234");
 SQB::configure("db", "dbname");
 
 SQB::init();
-  // use it
+
 SQB::quit();
 ```
 
