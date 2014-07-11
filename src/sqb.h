@@ -1,35 +1,115 @@
-#include "Sqb.h"
+#ifndef _SQB_H
+#define _SQB_H
 
-using namespace std;
+#include <string>
+#include <vector>
+#include <map>
 
-Sqb::Sqb() :
-	nLimit(0),
-	queryType(0){
-}
-Sqb::~Sqb(){
-}
+/*
+	SQB / Simple Query Builder
+*/
+namespace SQB{
+	class Query;
 
-void Sqb::setQueryType(int _queryType){
-	queryType = _queryType;
-}
-void Sqb::setTable(const string &_table){
-	table = _table;
-}
-void Sqb::setLimit(int _limit){
-	nLimit = _limit;
-}
+	const int POOL_SIZE = 10;
 
-void Sqb::addResultColumn(const string &col){
-	results.push_back( col );
-}
-void Sqb::addCondition(
-	const string &col, const string &op, const string &value){
+	bool init();
+	void quit();
 
-	conditions.push_back(
-		col + " " + op + " " + value );
-}
-void Sqb::addCondition(
-	const string &query){
+	void configure(
+		const std::string &key, const std::string &value);
+	std::string &getConfig(
+		const std::string &key);
 
-	conditions.push_back( query );
-}
+	bool tryBegin();
+	void begin();
+	void commit();
+	void rollback();
+	MYSQL *getDB();
+
+	Query *from(const std::string &table);
+
+	class Query{
+		friend Query *from(const std::string &table);
+
+	public:
+		Query *where(const std::string &col, const std::string &value);
+		Query *where_equal(const std::string &col, const std::string &value);
+		Query *where_not_equal(const std::string &col, const std::string &value);
+		Query *where_like(const std::string &col, const std::string &value);
+		Query *where_not_like(const std::string &col, const std::string &value);
+		Query *where_gt(const std::string &col, const std::string &value);
+		Query *where_gte(const std::string &col, const std::string &value);
+		Query *where_lt(const std::string &col, const std::string &value);
+		Query *where_lte(const std::string &col, const std::string &value);
+		Query *where_raw(const std::string &query);
+
+		Query *select(const std::string &col);
+		Query *select(int count, ...);
+
+		Query *limit(int limit);
+
+		void set(const std::string &key, const std::string &value);
+		std::string &get(const std::string &key);
+
+		std::string find_one();
+		std::string find_many();
+
+		Query *create();
+		std::string save();
+
+		std::string build();
+
+	public:
+		std::string &operator[](const std::string &key);
+
+	protected:
+		Query();
+		virtual ~Query();
+
+		void setQueryType(int queryType);
+		void setTable(const std::string &table);
+		void setLimit(int limit);
+
+		void addResultColumn(const std::string &col);
+		void addCondition(
+			const std::string &col, const std::string &op, const std::string &value);
+		void addCondition(const std::string &condition);
+
+		std::string buildResultColumns();
+		std::string buildConditions();
+		std::string buildFieldKeys();
+		std::string buildFieldValues();
+
+		std::string buildFrom();
+		std::string buildInto();
+
+		std::string buildLimit();
+	
+		std::string buildSelect();
+		std::string buildUpdate();
+		std::string buildDelete();
+		std::string buildInsert();
+
+	protected:
+		enum QueryType{
+			SELECT=1,
+			UPDATE,
+			DELETE,
+			INSERT
+		};
+
+	protected:
+		int queryType;
+
+		std::string table;
+		std::vector<std::string> conditions;
+		std::vector<std::string> results;
+		std::map<std::string,std::string> fields;
+
+		int nLimit;
+	};
+};
+
+
+#endif //_SQB_H
