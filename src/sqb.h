@@ -1,6 +1,8 @@
 #ifndef _SQB_H
 #define _SQB_H
 
+#include <mysql.h>
+
 #include <string>
 #include <vector>
 #include <map>
@@ -16,17 +18,22 @@ namespace SQB{
 	bool init();
 	void quit();
 
+	/* CONFIGURATION API */
 	void configure(
 		const std::string &key, const std::string &value);
 	std::string &getConfig(
 		const std::string &key);
 
+	/* TRANSACTION API */
 	bool tryBegin();
 	void begin();
 	void commit();
 	void rollback();
+
+	/* RAW API */
 	MYSQL *getDB();
 
+	/* SELECT DB */
 	Query *from(const std::string &table);
 
 	class Query{
@@ -110,6 +117,8 @@ namespace SQB{
 		int nLimit;
 	};
 };
+
+
 
 
 #endif //_SQB_H
