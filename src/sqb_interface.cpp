@@ -4,60 +4,62 @@
 
 using namespace std;
 
-Sqb *Sqb::from(const string &table){
-	Sqb *sqb = new Sqb();
+namespace SQB{
+
+Query *from(const string &table){
+	Query *Query = new SQB::Query();
 		
-		sqb->setTable( table );
-	return sqb;
+		Query->setTable( table );
+	return Query;
 }
 
-Sqb *Sqb::where(const string &col, const string &value){
+Query *Query::where(const string &col, const string &value){
 	addCondition( col, "=", value );
 	return this;
 }
-Sqb *Sqb::where_equal(const string &col, const string &value){
+Query *Query::where_equal(const string &col, const string &value){
 	addCondition( col, "=", value );
 	return this;
 }
-Sqb *Sqb::where_not_equal(const string &col, const string &value){
+Query *Query::where_not_equal(const string &col, const string &value){
 	addCondition( col, "!=", value );
 	return this;
 }
-Sqb *Sqb::where_like(const string &col, const string &value){
+Query *Query::where_like(const string &col, const string &value){
 	addCondition( col, "LIKE", value );
 	return this;
 }
-Sqb *Sqb::where_not_like(const string &col, const string &value){
+Query *Query::where_not_like(const string &col, const string &value){
 	addCondition( col, "NOT LIKE", value );
 	return this;
 }
-Sqb *Sqb::where_gt(const string &col, const string &value){
+Query *Query::where_gt(const string &col, const string &value){
 	addCondition( col, ">", value );
 	return this;
 }
-Sqb *Sqb::where_gte(const string &col, const string &value){
+Query *Query::where_gte(const string &col, const string &value){
 	addCondition( col, ">=", value );
 	return this;
 }
-Sqb *Sqb::where_lt(const string &col, const string &value){
+Query *Query::where_lt(const string &col, const string &value){
 	addCondition( col, "<", value );
 	return this;
 }
-Sqb *Sqb::where_lte(const string &col, const string &value){
+Query *Query::where_lte(const string &col, const string &value){
 	addCondition( col, "<=", value );
 	return this;
 }
 
-Sqb *Sqb::where_raw(const string &query){
+Query *Query::where_raw(const string &query){
 	addCondition( query );
 	return this;
 }
 
-Sqb *Sqb::select(const string &col){
+Query *Query::select(const string &col){
 	addResultColumn( col );
 	return this;
 }
-Sqb *Sqb::select(int count, ...){
+Query *Query::select(int count, ...){
 	va_list va;
 
 	va_start( va, count );
@@ -69,36 +71,38 @@ Sqb *Sqb::select(int count, ...){
 	return this;
 }
 
-Sqb *Sqb::limit(int limit){
+Query *Query::limit(int limit){
 	setLimit( limit );
 	return this;
 }
 
-Sqb *Sqb::create(){
-	Sqb *sqb = Sqb::from( table );
-	sqb->setQueryType(
+Query *Query::create(){
+	Query *Query = SQB::from( table );
+	Query->setQueryType(
 		QueryType::INSERT );
 
-	return sqb;
+	return Query;
 }
 
-string Sqb::find_one(){
+string Query::find_one(){
 	setLimit( 1 );
 	return buildSelect();
 }
-string Sqb::find_many(){
+string Query::find_many(){
 	return buildSelect();
 }
-string Sqb::save(){
+string Query::save(){
 	return buildInsert();
 }
 
-void Sqb::set(const string &key, const string &value){
+void Query::set(const string &key, const string &value){
 	fields[key] = value;
 }
-string &Sqb::get(const string &key){
+string &Query::get(const string &key){
 	return fields[key];
 }
-string &Sqb::operator[](const std::string &key){
+string &Query::operator[](const std::string &key){
 	return fields[key];
+}
+
 }
