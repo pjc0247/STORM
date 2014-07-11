@@ -2,6 +2,8 @@
 
 using namespace std;
 
+namespace SQB{
+
 string join(vector<string> vec, string delim){
 	string result;
 
@@ -14,19 +16,19 @@ string join(vector<string> vec, string delim){
 		(*vec.rbegin());
 }
 
-string Sqb::buildResultColumns(){
+string Query::buildResultColumns(){
 	string query = "WHERE ";
 	
 	return query +
 		join( results, "," );
 }
-string Sqb::buildConditions(){
+string Query::buildConditions(){
 	string query = "WHERE ";
 
 	return query +
 		join( conditions, " AND " );
 }
-string Sqb::buildFieldKeys(){
+string Query::buildFieldKeys(){
 	string keys;
 	auto it = fields.begin();
 
@@ -39,7 +41,7 @@ string Sqb::buildFieldKeys(){
 
 	return keys;
 }
-string Sqb::buildFieldValues(){
+string Query::buildFieldValues(){
 	string values;
 	auto it = fields.begin();
 
@@ -53,21 +55,21 @@ string Sqb::buildFieldValues(){
 	return values;
 }
 
-string Sqb::buildFrom(){
+string Query::buildFrom(){
 	string query = "FROM ";
 
 	query += table;
 	
 	return query;
 }
-string Sqb::buildInto(){
+string Query::buildInto(){
 	string query = "INTO ";
 
 	query += table;
 	
 	return query;
 }
-string Sqb::buildLimit(){
+string Query::buildLimit(){
 	string query = "LIMIT ";
 	char buf[12];
 
@@ -77,7 +79,7 @@ string Sqb::buildLimit(){
 	return query;
 }
 
-string Sqb::buildSelect(){
+string Query::buildSelect(){
 	string query = "SELECT ";
 	query +=
 		buildResultColumns() + " " +
@@ -87,13 +89,13 @@ string Sqb::buildSelect(){
 
 	return query;
 }
-string Sqb::buildUpdate(){
+string Query::buildUpdate(){
 	return "";
 }
-string Sqb::buildDelete(){
+string Query::buildDelete(){
 	return "";
 }
-string Sqb::buildInsert(){
+string Query::buildInsert(){
 	string query = "INSERT ";
 	query +=
 		buildInto() + " (" +
@@ -103,7 +105,7 @@ string Sqb::buildInsert(){
 	return query;
 }
 
-string Sqb::build(){
+string Query::build(){
 	switch( queryType ){
 	case SELECT:
 		return buildSelect();
@@ -114,4 +116,6 @@ string Sqb::build(){
 	case INSERT:
 		return buildInsert();
 	}
+}
+
 }
