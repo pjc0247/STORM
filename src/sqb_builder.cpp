@@ -7,6 +7,9 @@ namespace SQB{
 string join(vector<string> vec, string delim){
 	string result;
 
+	if( vec.empty() )
+		return "";
+
 	for(auto it=vec.begin();it!=vec.end()-1;++it){
 		result +=
 			(*it) + delim;
@@ -17,10 +20,10 @@ string join(vector<string> vec, string delim){
 }
 
 string Query::buildResultColumns(){
-	string query = "WHERE ";
-	
-	return query +
-		join( results, "," );
+	if( results.empty() )
+		return "*";
+	else
+		return join( results, "," );
 }
 string Query::buildConditions(){
 	string query = "WHERE ";
@@ -73,6 +76,9 @@ string Query::buildLimit(){
 	string query = "LIMIT ";
 	char buf[12];
 
+	if( nLimit == 0 )
+		return "";
+
 	sprintf( buf, "%d", nLimit );
 	query += string(buf);
 	
@@ -107,13 +113,13 @@ string Query::buildInsert(){
 
 string Query::build(){
 	switch( queryType ){
-	case SELECT:
+	case eSELECT:
 		return buildSelect();
-	case UPDATE:
+	case eUPDATE:
 		return buildUpdate();
-	case DELETE:
+	case eDELETE:
 		return buildDelete();
-	case INSERT:
+	case eINSERT:
 		return buildInsert();
 	}
 }
