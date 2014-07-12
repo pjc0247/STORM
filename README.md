@@ -72,7 +72,7 @@ SQB::Query *query =
     ->where("id", "pjc0247")
     ->find_one();
 
-query->delete();
+query->remove();
 ```
 
 TRANSACTION
