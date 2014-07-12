@@ -43,6 +43,7 @@ for(auto result : results)
 
 INSERT Query
 ----
+
 ```C++
 SQB::Query *query =
   SQB::from("test")->create();
@@ -56,6 +57,8 @@ query->save();
 ```
 
 UPDATE Query
+----
+
 ```C++
 SQB::Query *query =
   SQB::from("test")
@@ -68,6 +71,8 @@ query->save();
 ```
 
 DELETE Query
+----
+
 ```C++
 SQB::Query *query =
   SQB::from("test")
