@@ -76,8 +76,7 @@ namespace SQB{
 	public:
 		std::string &operator[](const std::string &key);
 
-	//protected:
-	public:
+	protected:
 		Query();
 		virtual ~Query();
 
