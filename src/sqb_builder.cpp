@@ -57,6 +57,21 @@ string Query::buildFieldValues(){
 
 	return values;
 }
+string Query::buildChanges(){
+	string changes;
+
+	if( dirtyFields.empty() )
+		return "";
+
+	for(auto fieldName : dirtyFields){
+		changes +=
+			fieldName + "=\'" +
+			get( fieldName ) + "\',";
+	}
+	changes.pop_back();
+
+	return changes;
+}
 
 string Query::buildFrom(){
 	string query = "FROM ";
@@ -96,10 +111,21 @@ string Query::buildSelect(){
 	return query;
 }
 string Query::buildUpdate(){
-	return "";
+	string query = "UPDATE ";
+
+	query +=
+		table + " SET " +
+		buildChanges() + " " +
+		buildConditions();
+	return query;
 }
 string Query::buildDelete(){
-	return "";
+	string query = "DELETE ";
+
+	query +=
+		buildFrom() + " " +
+		buildConditions();
+	return query;
 }
 string Query::buildInsert(){
 	string query = "INSERT ";
