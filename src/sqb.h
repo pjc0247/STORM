@@ -38,7 +38,7 @@ namespace SQB{
 	MYSQL *getDB();
 	int raw_query(const std::string &query);
 
-	/* SELECT DB */
+	/* SELECT TABLE */
 	Query *from(const std::string &table);
 
 	class Query{
