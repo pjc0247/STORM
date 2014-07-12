@@ -11,6 +11,9 @@ Query::Query() :
 Query::~Query(){
 }
 
+void Query::setNoDirt(const string &key, const string &value){
+	fields[key] = value;
+}
 void Query::setConnectionObject(MYSQL *_mysql){
 	mysql = _mysql;
 }
@@ -86,9 +89,103 @@ vector<MYSQL_ROW> Query::fetchRows(MYSQL_RES *result){
 }
 MYSQL_ROW Query::fetchNextRow(MYSQL_RES *result){
 	MYSQL_ROW row =
-		mysql_fetch_row (result );
+		mysql_fetch_row( result );
 	
 	return row;
+}
+
+void Query::dirtField(const string &fieldName){
+	dirtyFields.push_back( fieldName );
+}
+void Query::cleanDirtyFields(){
+	dirtyFields.clear();
+}
+
+Query *Query::findSingleRecord(){
+	string sql = buildSelect();
+
+	if( query( sql ))
+		return NULL;
+
+	MYSQL_RES *result = storeResult();
+	if( result == NULL )
+		return NULL;
+
+	MYSQL_ROW row =
+		fetchNextRow( result );
+	if( row == NULL )
+		return NULL;
+
+	SQB::Query *obj = SQB::from( table );
+	auto fields =
+		fetchFields( result );
+
+	for(int i=0;i<fields.size();i++)
+		obj->setNoDirt( fields[i], row[i] );
+
+	/* 나중에 이 레코드를 식별하기 위해 */
+	obj->where("id", obj->get("id") );
+	obj->setQueryType(
+		QueryType::eUPDATE );
+	
+	mysql_free_result( result );
+
+	return obj;
+}
+vector<Query*> Query::findRecords(){
+	vector<Query*> results;
+	string sql = buildSelect();
+
+	if( query( sql ))
+		return results;
+
+	MYSQL_RES *result = storeResult();
+	if( result == NULL )
+		return results;
+
+	auto fields =
+		fetchFields( result );
+	auto rows =
+		fetchRows( result );
+
+	for(int i=0;i<rows.size();i++){
+		SQB::Query *obj = SQB::from( table );
+
+		for(int j=0;j<fields.size();j++)
+			obj->setNoDirt( fields[j], rows[i][j] );
+
+		/* 나중에 이 레코드를 식별하기 위해 */
+		obj->where("id", obj->get("id") );
+		obj->setQueryType(
+			QueryType::eUPDATE );
+
+		results.push_back( obj );
+	}
+	
+	mysql_free_result( result );
+
+	return results;
+}
+bool Query::updateRecords(){
+	string sql = buildUpdate();
+
+	if( query( sql ))
+		return false;
+	return true;
+}
+bool Query::insertRecord(){
+	string sql = buildInsert();
+
+	if( query( sql ))
+		return false;
+	return true;
+}
+bool Query::removeRecords(){
+	string sql = buildDelete();
+
+	if( query( sql ))
+		return false;
+	return true;
 }
 
 }
