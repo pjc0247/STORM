@@ -35,9 +35,8 @@ auto = results = query
   ->where_raw("nick=foo")
   ->limit(5)
   ->find_mamy();
-for(auto result : results){
+for(auto result : results)
   cout<<(*result)["level"]<<endl;
-}
 ```
 
 INSERT Query
