@@ -53,6 +53,28 @@ query->set("nick", "anz");
 query->save();
 ```
 
+UPDATE Query
+```C++
+SQB::Query *query =
+  SQB::from("test")
+    ->where("id", "pjc0247")
+    ->find_one();
+
+(*query)["nickname"] = "anz";
+
+query->save();
+```
+
+DELETE Query
+```C++
+SQB::Query *query =
+  SQB::from("test")
+    ->where("id", "pjc0247")
+    ->find_one();
+
+query->delete();
+```
+
 TRANSACTION
 ----
 ```C++
