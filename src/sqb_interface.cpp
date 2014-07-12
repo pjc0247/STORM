@@ -79,17 +79,70 @@ Query *Query::limit(int limit){
 Query *Query::create(){
 	Query *Query = SQB::from( table );
 	Query->setQueryType(
-		QueryType::INSERT );
+		QueryType::eINSERT );
 
 	return Query;
 }
 
-string Query::find_one(){
+Query *Query::find_one(){
 	setLimit( 1 );
-	return buildSelect();
+	setConnectionObject( getDB() );
+
+	string sql = buildSelect();
+
+	if( query( sql.c_str() ))
+		return NULL;
+
+	MYSQL_RES *result = storeResult();
+	if( result == NULL )
+		return NULL;
+
+	MYSQL_ROW row =
+		fetchNextRow( result );
+	if( row == NULL )
+		return NULL;
+
+	SQB::Query *obj = SQB::from( table );
+	auto fields =
+		fetchFields( result );
+	
+	for(int i=0;i<fields.size();i++)
+		(*obj)[ fields[i] ] = row[i];
+	
+	mysql_free_result( result );
+
+	return obj;
 }
-string Query::find_many(){
-	return buildSelect();
+vector<Query*> Query::find_many(){
+	setConnectionObject( getDB() );
+
+	vector<Query*> results;
+	string sql = buildSelect();
+
+	if( query( sql.c_str() ))
+		return results;
+
+	MYSQL_RES *result = storeResult();
+	if( result == NULL )
+		return results;
+
+	auto fields =
+		fetchFields( result );
+	auto rows =
+		fetchRows( result );
+
+	for(int i=0;i<rows.size();i++){
+		SQB::Query *obj = SQB::from( table );
+
+		for(int j=0;j<fields.size();j++)
+			(*obj)[ fields[j] ] = rows[i][j];
+
+		results.push_back( obj );
+	}
+	
+	mysql_free_result( result );
+
+	return results;
 }
 string Query::save(){
 	return buildInsert();
