@@ -71,8 +71,12 @@ SQB::Query *query =
   SQB::from("test")
     ->where("id", "pjc0247")
     ->find_one();
-
 query->remove();
+
+SQB::Query *query = 
+  SQB::from("test")
+    ->where("level", "1")
+    ->delete();
 ```
 
 TRANSACTION
