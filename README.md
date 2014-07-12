@@ -80,7 +80,7 @@ query->remove();
 auto query = 
   SQB::from("test")
     ->where("level", "1")
-    ->delete();
+    ->remove();
 ```
 
 TRANSACTION
