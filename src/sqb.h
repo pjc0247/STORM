@@ -8,7 +8,7 @@
 #include <map>
 
 /*
-	SQB / Simple Query Builder
+	SQB / Simple MYSQL Query Builder
 */
 namespace SQB{
 	class Query;
@@ -18,6 +18,9 @@ namespace SQB{
 
 	bool init();
 	void quit();
+
+	/* ERROR API */
+	std::string getLastErrorMessage();
 
 	/* CONFIGURATION API */
 	void configure(
@@ -60,8 +63,8 @@ namespace SQB{
 		void set(const std::string &key, const std::string &value);
 		std::string &get(const std::string &key);
 
-		std::string find_one();
-		std::string find_many();
+		Query *find_one();
+		std::vector<Query*> find_many();
 
 		Query *create();
 		std::string save();
@@ -74,6 +77,8 @@ namespace SQB{
 	protected:
 		Query();
 		virtual ~Query();
+
+		void setConnectionObject(MYSQL *mysql);
 
 		void setQueryType(int queryType);
 		void setTable(const std::string &table);
@@ -99,12 +104,19 @@ namespace SQB{
 		std::string buildDelete();
 		std::string buildInsert();
 
+		int query(const std::string &query);
+		MYSQL_RES *storeResult();
+		void freeResult(MYSQL_RES *mysql);
+		std::vector<std::string> fetchFields(MYSQL_RES *result);
+		std::vector<MYSQL_ROW> fetchRows(MYSQL_RES *result);
+		MYSQL_ROW fetchNextRow(MYSQL_RES *result);
+
 	protected:
 		enum QueryType{
-			SELECT=1,
-			UPDATE,
-			DELETE,
-			INSERT
+			eSELECT=1,
+			eUPDATE,
+			eDELETE,
+			eINSERT
 		};
 
 	protected:
@@ -116,6 +128,8 @@ namespace SQB{
 		std::map<std::string,std::string> fields;
 
 		int nLimit;
+
+		MYSQL *mysql;
 	};
 };
 
