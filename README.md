@@ -6,6 +6,8 @@ c++ simple query builder
 
 idiorm짝퉁
 
+__id라는 이름의 PRIMARY 필드가 항상 잇어야 사용 가능__
+
 Configuration
 ----
 ```C++
