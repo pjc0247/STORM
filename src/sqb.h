@@ -36,6 +36,7 @@ namespace SQB{
 
 	/* RAW API */
 	MYSQL *getDB();
+	int raw_query(const std::string &query);
 
 	/* SELECT DB */
 	Query *from(const std::string &table);
@@ -67,18 +68,22 @@ namespace SQB{
 		std::vector<Query*> find_many();
 
 		Query *create();
-		std::string save();
+		bool save();
+		bool remove();
 
 		std::string build();
 
 	public:
 		std::string &operator[](const std::string &key);
 
-	protected:
+	//protected:
+	public:
 		Query();
 		virtual ~Query();
 
 		void setConnectionObject(MYSQL *mysql);
+
+		void setNoDirt(const std::string &key, const std::string &value);
 
 		void setQueryType(int queryType);
 		void setTable(const std::string &table);
@@ -93,6 +98,7 @@ namespace SQB{
 		std::string buildConditions();
 		std::string buildFieldKeys();
 		std::string buildFieldValues();
+		std::string buildChanges();
 
 		std::string buildFrom();
 		std::string buildInto();
@@ -104,6 +110,17 @@ namespace SQB{
 		std::string buildDelete();
 		std::string buildInsert();
 
+		void dirtField(const std::string &fieldName);
+		void cleanDirtyFields();
+
+		/* SELECT, UPDATE, INSERT, DELETE backends */
+		Query *findSingleRecord();
+		std::vector<Query*> findRecords();
+		bool updateRecords();
+		bool insertRecord();
+		bool removeRecords();
+
+		/* MYSQL Wrapping */
 		int query(const std::string &query);
 		MYSQL_RES *storeResult();
 		void freeResult(MYSQL_RES *mysql);
@@ -126,6 +143,7 @@ namespace SQB{
 		std::vector<std::string> conditions;
 		std::vector<std::string> results;
 		std::map<std::string,std::string> fields;
+		std::vector<std::string> dirtyFields;
 
 		int nLimit;
 
