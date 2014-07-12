@@ -6,7 +6,7 @@ c++ simple query builder
 
 idiorm짝퉁
 
-__테이블마다 id라는 이름의 PRIMARY 필드가 있어야 사용 가능__
+__테이블마다 id라는 이름의 UNIQUE 필드가 있어야 사용 가능__
 
 Configuration
 ----
