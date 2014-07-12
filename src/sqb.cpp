@@ -21,4 +21,10 @@ void quit(){
 	quitPool();
 }
 
+string getLastErrorMessage(){
+	MYSQL *mysql = getDB();
+
+	return mysql_error( mysql );
+}
+
 }
