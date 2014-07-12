@@ -42,7 +42,7 @@ INSERT Query
 ----
 
 ```C++
-auto *query =
+auto query =
   SQB::from("test")->create();
 
 query->set("id", "pjc");
@@ -57,7 +57,7 @@ UPDATE Query
 ----
 
 ```C++
-auto *query =
+auto query =
   SQB::from("test")
     ->where("id", "pjc0247")
     ->find_one();
@@ -71,13 +71,13 @@ DELETE Query
 ----
 
 ```C++
-auto *query =
+auto query =
   SQB::from("test")
     ->where("id", "pjc0247")
     ->find_one();
 query->remove();
 
-auto *query = 
+auto query = 
   SQB::from("test")
     ->where("level", "1")
     ->delete();
