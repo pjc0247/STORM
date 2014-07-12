@@ -95,11 +95,15 @@ void commit(){
 	MYSQL *mysql = localGetDB();
 
 	mysql_query( mysql, "COMMIT" );
+
+	conns.push( mysql );
 }
 void rollback(){
 	MYSQL *mysql = localGetDB();
 
 	mysql_query( mysql, "ROLLBACK" );
+
+	conns.push( mysql );
 }
 
 MYSQL *getDB(){
