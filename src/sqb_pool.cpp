@@ -60,6 +60,10 @@ MYSQL *localGetDB(){
 void localSetDB(MYSQL *mysql){
 	tls[ this_thread::get_id() ] = mysql;
 }
+void returnDB(MYSQL *mysql){
+	localSetDB( NULL );
+	conns.push( mysql );
+}
 
 bool tryBegin(){
 	MYSQL *mysql;
@@ -96,14 +100,14 @@ void commit(){
 
 	mysql_query( mysql, "COMMIT" );
 
-	conns.push( mysql );
+	returnDB( mysql );
 }
 void rollback(){
 	MYSQL *mysql = localGetDB();
 
 	mysql_query( mysql, "ROLLBACK" );
 
-	conns.push( mysql );
+	returnDB( mysql );
 }
 
 MYSQL *getDB(){
