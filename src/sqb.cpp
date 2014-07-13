@@ -26,7 +26,7 @@ string getLastErrorMessage(){
 
 	return mysql_error( mysql );
 }
-int raw_query(const std::string &query){
+int rawQuery(const std::string &query){
 	return mysql_query(
 		getDB(), query.c_str() );
 }
