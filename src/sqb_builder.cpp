@@ -49,7 +49,8 @@ string Query::buildFieldValues(){
 	auto it = fields.begin();
 
 	while( it != fields.end() ){
-		values += "\'" + (*it).second + "\'";
+		values += "\'" + 
+			escape((*it).second) + "\'";
 
 		if( ++it != fields.end() )
 			values += ",";
@@ -66,7 +67,7 @@ string Query::buildChanges(){
 	for(auto fieldName : dirtyFields){
 		changes +=
 			fieldName + "=\'" +
-			get( fieldName ) + "\',";
+			escape(get(fieldName)) + "\',";
 	}
 	changes.pop_back();
 
