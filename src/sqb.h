@@ -13,9 +13,6 @@
 namespace SQB{
 	class Query;
 
-	/* size of MYSQL connection pool */
-	const int POOL_SIZE = 10;
-
 	bool init();
 	void quit();
 
@@ -76,7 +73,8 @@ namespace SQB{
 	public:
 		std::string &operator[](const std::string &key);
 
-	protected:
+	//protected:
+	public:
 		Query();
 		virtual ~Query();
 
@@ -108,6 +106,8 @@ namespace SQB{
 		std::string buildUpdate();
 		std::string buildDelete();
 		std::string buildInsert();
+
+		std::string escape(const std::string &str);
 
 		void dirtField(const std::string &fieldName);
 		void cleanDirtyFields();
@@ -149,8 +149,5 @@ namespace SQB{
 		MYSQL *mysql;
 	};
 };
-
-
-
 
 #endif //_SQB_H
