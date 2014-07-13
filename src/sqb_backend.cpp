@@ -35,7 +35,8 @@ void Query::addCondition(
 	const string &col, const string &op, const string &value){
 
 	conditions.push_back(
-		col + " " + op + " \'" + value + "\'" );
+		col + " " + op + " \'" +
+		escape(value) + "\'" );
 }
 void Query::addCondition(
 	const string &query){
@@ -44,8 +45,8 @@ void Query::addCondition(
 }
 
 int Query::query(const std::string &query){
-	int result = 
-		mysql_query( mysql, query.c_str() );
+	int result = mysql_query(
+		mysql, query.c_str() );
 
 	return result;
 }
