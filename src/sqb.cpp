@@ -31,4 +31,14 @@ int raw_query(const std::string &query){
 		getDB(), query.c_str() );
 }
 
+string escape(const string &str){
+	static MYSQL *mysql = mysql_init( NULL );
+	char escaped[1024];
+
+	mysql_real_escape_string(
+		mysql, escaped, str.c_str(), str.length() );
+
+	return escaped;
+}
+
 }
