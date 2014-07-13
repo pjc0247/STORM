@@ -21,11 +21,14 @@ bool initPool(){
 	string passwd = getConfig("password");
 	string db = getConfig("db");
 	int port;
+	int poolSize;
 
+	sscanf(
+		getConfig("pool_size").c_str(), "%d", &poolSize );
 	sscanf(
 		getConfig("port").c_str(), "%d", &port );
 
-	for(int i=0;i<SQB::POOL_SIZE;i++){
+	for(int i=0;i<poolSize;i++){
 		MYSQL *mysql = mysql_init(NULL);
 
 		if( mysql_real_connect(
