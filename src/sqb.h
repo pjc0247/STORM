@@ -38,6 +38,9 @@ namespace SQB{
 	/* SELECT TABLE */
 	Query *from(const std::string &table);
 
+	/* ESCAPE */
+	std::string escape(const std::string &str);
+
 	class Query{
 		friend Query *from(const std::string &table);
 
@@ -73,8 +76,7 @@ namespace SQB{
 	public:
 		std::string &operator[](const std::string &key);
 
-	//protected:
-	public:
+	protected:
 		Query();
 		virtual ~Query();
 
@@ -106,8 +108,6 @@ namespace SQB{
 		std::string buildUpdate();
 		std::string buildDelete();
 		std::string buildInsert();
-
-		std::string escape(const std::string &str);
 
 		void dirtField(const std::string &fieldName);
 		void cleanDirtyFields();
