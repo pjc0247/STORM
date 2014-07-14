@@ -27,13 +27,13 @@ auto result = query
   ->where("id", "foo")
   ->where("nick", "bar")
   ->select("level")
-  ->find_one();
+  ->findOne();
 cout<<(*result)["level"];
   
 auto = results = query
-  ->where_raw("nick=foo")
+  ->whereRaw("nick=foo")
   ->limit(5)
-  ->find_mamy();
+  ->findMamy();
 for(auto result : results)
   cout<<(*result)["level"]<<endl;
 ```
@@ -60,7 +60,7 @@ UPDATE Query
 auto query =
   SQB::from("test")
     ->where("id", "pjc0247")
-    ->find_one();
+    ->findOne();
 
 (*query)["nickname"] = "anz";
 
@@ -74,7 +74,7 @@ DELETE Query
 auto query =
   SQB::from("test")
     ->where("id", "pjc0247")
-    ->find_one();
+    ->findOne();
 query->remove();
 
 auto query = 
