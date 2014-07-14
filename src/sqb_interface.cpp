@@ -96,6 +96,43 @@ vector<Query*> Query::findMany(){
 	return findRecords();
 }
 
+string Query::findMin(const string &col){
+	setConnectionObject( getDB() );
+
+	results.clear();
+	addResultColumn(
+		"MIN(" + col + ")" );
+
+	return findSingleValue();
+}
+string Query::findMax(const string &col){
+	setConnectionObject( getDB() );
+
+	results.clear();
+	addResultColumn(
+		"MAX(" + col + ")" );
+
+	return findSingleValue();
+}
+string Query::findAvg(const string &col){
+	setConnectionObject( getDB() );
+
+	results.clear();
+	addResultColumn(
+		"AVG(" + col + ")" );
+
+	return findSingleValue();
+}
+string Query::findSum(const string &col){
+	setConnectionObject( getDB() );
+
+	results.clear();
+	addResultColumn(
+		"SUM(" + col + ")" );
+
+	return findSingleValue();
+}
+
 bool Query::remove(){
 	setConnectionObject( getDB() );
 
