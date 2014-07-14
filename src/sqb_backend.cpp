@@ -102,6 +102,25 @@ void Query::cleanDirtyFields(){
 	dirtyFields.clear();
 }
 
+string Query::findSingleValue(){
+	string sql = buildSelect();
+
+	if( query( sql ))
+		return "";
+
+	MYSQL_RES *result = storeResult();
+	if( result == NULL )
+		return "";
+
+	MYSQL_ROW row =
+		fetchNextRow( result );
+	if( row == NULL )
+		return "";
+	
+	mysql_free_result( result );
+
+	return row[0];
+}
 Query *Query::findSingleRecord(){
 	string sql = buildSelect();
 
