@@ -33,7 +33,7 @@ cout<<(*result)["level"];
 auto = results = query
   ->whereRaw("nick=foo")
   ->limit(5)
-  ->findMamy();
+  ->findMany();
 for(auto result : results)
   cout<<(*result)["level"]<<endl;
 ```
