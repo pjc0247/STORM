@@ -45,16 +45,23 @@ namespace SQB{
 		friend Query *from(const std::string &table);
 
 	public:
+		/*
+		std::string findMin(const std::string &col);
+		std::string findMax(const std::string &col);
+		std::string findAvg(const std::string &col);
+		std::string findSm(const std::string &col);
+		*/
+
 		Query *where(const std::string &col, const std::string &value);
-		Query *where_equal(const std::string &col, const std::string &value);
-		Query *where_not_equal(const std::string &col, const std::string &value);
-		Query *where_like(const std::string &col, const std::string &value);
-		Query *where_not_like(const std::string &col, const std::string &value);
-		Query *where_gt(const std::string &col, const std::string &value);
-		Query *where_gte(const std::string &col, const std::string &value);
-		Query *where_lt(const std::string &col, const std::string &value);
-		Query *where_lte(const std::string &col, const std::string &value);
-		Query *where_raw(const std::string &query);
+		Query *whereEqual(const std::string &col, const std::string &value);
+		Query *whereNotEqual(const std::string &col, const std::string &value);
+		Query *whereLike(const std::string &col, const std::string &value);
+		Query *whereNotLike(const std::string &col, const std::string &value);
+		Query *whereGt(const std::string &col, const std::string &value);
+		Query *whereGte(const std::string &col, const std::string &value);
+		Query *whereLt(const std::string &col, const std::string &value);
+		Query *whereLte(const std::string &col, const std::string &value);
+		Query *whereRaw(const std::string &query);
 
 		Query *select(const std::string &col);
 		Query *select(int count, ...);
@@ -64,8 +71,8 @@ namespace SQB{
 		void set(const std::string &key, const std::string &value);
 		std::string &get(const std::string &key);
 
-		Query *find_one();
-		std::vector<Query*> find_many();
+		Query *findOne();
+		std::vector<Query*> findMany();
 
 		Query *create();
 		bool save();
