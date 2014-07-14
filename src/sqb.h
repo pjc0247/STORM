@@ -45,13 +45,6 @@ namespace SQB{
 		friend Query *from(const std::string &table);
 
 	public:
-		/*
-		std::string findMin(const std::string &col);
-		std::string findMax(const std::string &col);
-		std::string findAvg(const std::string &col);
-		std::string findSm(const std::string &col);
-		*/
-
 		Query *where(const std::string &col, const std::string &value);
 		Query *whereEqual(const std::string &col, const std::string &value);
 		Query *whereNotEqual(const std::string &col, const std::string &value);
@@ -73,6 +66,11 @@ namespace SQB{
 
 		Query *findOne();
 		std::vector<Query*> findMany();
+
+		std::string findMin(const std::string &col);
+		std::string findMax(const std::string &col);
+		std::string findAvg(const std::string &col);
+		std::string findSum(const std::string &col);
 
 		Query *create();
 		bool save();
@@ -120,6 +118,7 @@ namespace SQB{
 		void cleanDirtyFields();
 
 		/* SELECT, UPDATE, INSERT, DELETE backends */
+		std::string findSingleValue();
 		Query *findSingleRecord();
 		std::vector<Query*> findRecords();
 		bool updateRecords();
