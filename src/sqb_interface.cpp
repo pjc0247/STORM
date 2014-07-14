@@ -17,40 +17,40 @@ Query *Query::where(const string &col, const string &value){
 	addCondition( col, "=", value );
 	return this;
 }
-Query *Query::where_equal(const string &col, const string &value){
+Query *Query::whereEqual(const string &col, const string &value){
 	addCondition( col, "=", value );
 	return this;
 }
-Query *Query::where_not_equal(const string &col, const string &value){
+Query *Query::whereNotEqual(const string &col, const string &value){
 	addCondition( col, "!=", value );
 	return this;
 }
-Query *Query::where_like(const string &col, const string &value){
+Query *Query::whereLike(const string &col, const string &value){
 	addCondition( col, "LIKE", value );
 	return this;
 }
-Query *Query::where_not_like(const string &col, const string &value){
+Query *Query::whereNotLike(const string &col, const string &value){
 	addCondition( col, "NOT LIKE", value );
 	return this;
 }
-Query *Query::where_gt(const string &col, const string &value){
+Query *Query::whereGt(const string &col, const string &value){
 	addCondition( col, ">", value );
 	return this;
 }
-Query *Query::where_gte(const string &col, const string &value){
+Query *Query::whereGte(const string &col, const string &value){
 	addCondition( col, ">=", value );
 	return this;
 }
-Query *Query::where_lt(const string &col, const string &value){
+Query *Query::whereLt(const string &col, const string &value){
 	addCondition( col, "<", value );
 	return this;
 }
-Query *Query::where_lte(const string &col, const string &value){
+Query *Query::whereLte(const string &col, const string &value){
 	addCondition( col, "<=", value );
 	return this;
 }
 
-Query *Query::where_raw(const string &query){
+Query *Query::whereRaw(const string &query){
 	addCondition( query );
 	return this;
 }
@@ -84,13 +84,13 @@ Query *Query::create(){
 	return Query;
 }
 
-Query *Query::find_one(){
+Query *Query::findOne(){
 	setLimit( 1 );
 	setConnectionObject( getDB() );
 
 	return findSingleRecord();
 }
-vector<Query*> Query::find_many(){
+vector<Query*> Query::findMany(){
 	setConnectionObject( getDB() );
 
 	return findRecords();
