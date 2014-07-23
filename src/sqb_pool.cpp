@@ -12,8 +12,8 @@ using namespace concurrency;
 
 namespace SQB{
 
-concurrent_queue<MYSQL*> conns;
-concurrent_unordered_map<thread::id, MYSQL*> tls;
+static concurrent_queue<MYSQL*> conns;
+static concurrent_unordered_map<thread::id, MYSQL*> tls;
 
 bool initPool(){
 	string host = getConfig("host");
