@@ -20,14 +20,14 @@ bool initPool(){
 	string passwd = get_config("password");
 	string db = get_config("db");
 	int port;
-	int poolSize;
+	int pool_size;
 
 	sscanf(
-		get_config("pool_size").c_str(), "%d", &poolSize );
+		get_config("pool_size").c_str(), "%d", &pool_size );
 	sscanf(
 		get_config("port").c_str(), "%d", &port );
 
-	for(int i=0;i<poolSize;i++){
+	for(int i=0;i<pool_size;i++){
 		MYSQL *mysql = mysql_init(NULL);
 
 		if( mysql_real_connect(
