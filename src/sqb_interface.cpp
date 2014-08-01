@@ -9,54 +9,54 @@ namespace SQB{
 Query *from(const string &table){
 	Query *Query = new SQB::Query();
 		
-		Query->setTable( table );
+		Query->set_table( table );
 	return Query;
 }
 
 Query *Query::where(const string &col, const string &value){
-	addCondition( col, "=", value );
+	add_condition( col, "=", value );
 	return this;
 }
-Query *Query::whereEqual(const string &col, const string &value){
-	addCondition( col, "=", value );
+Query *Query::where_equal(const string &col, const string &value){
+	add_condition( col, "=", value );
 	return this;
 }
-Query *Query::whereNotEqual(const string &col, const string &value){
-	addCondition( col, "!=", value );
+Query *Query::where_not_equal(const string &col, const string &value){
+	add_condition( col, "!=", value );
 	return this;
 }
-Query *Query::whereLike(const string &col, const string &value){
-	addCondition( col, "LIKE", value );
+Query *Query::where_like(const string &col, const string &value){
+	add_condition( col, "LIKE", value );
 	return this;
 }
-Query *Query::whereNotLike(const string &col, const string &value){
-	addCondition( col, "NOT LIKE", value );
+Query *Query::where_not_like(const string &col, const string &value){
+	add_condition( col, "NOT LIKE", value );
 	return this;
 }
-Query *Query::whereGt(const string &col, const string &value){
-	addCondition( col, ">", value );
+Query *Query::where_gt(const string &col, const string &value){
+	add_condition( col, ">", value );
 	return this;
 }
-Query *Query::whereGte(const string &col, const string &value){
-	addCondition( col, ">=", value );
+Query *Query::where_gte(const string &col, const string &value){
+	add_condition( col, ">=", value );
 	return this;
 }
-Query *Query::whereLt(const string &col, const string &value){
-	addCondition( col, "<", value );
+Query *Query::where_lt(const string &col, const string &value){
+	add_condition( col, "<", value );
 	return this;
 }
-Query *Query::whereLte(const string &col, const string &value){
-	addCondition( col, "<=", value );
+Query *Query::where_lte(const string &col, const string &value){
+	add_condition( col, "<=", value );
 	return this;
 }
 
-Query *Query::whereRaw(const string &query){
-	addCondition( query );
+Query *Query::where_raw(const string &query){
+	add_condition( query );
 	return this;
 }
 
 Query *Query::select(const string &col){
-	addResultColumn( col );
+	add_result_column( col );
 	return this;
 }
 Query *Query::select(int count, ...){
@@ -64,7 +64,7 @@ Query *Query::select(int count, ...){
 
 	va_start( va, count );
 		for(int i=0;i<count;i++){
-			addResultColumn(
+			add_result_column(
 				va_arg( va, const string ));
 		}
 	va_end( va );
@@ -72,100 +72,100 @@ Query *Query::select(int count, ...){
 }
 
 Query *Query::limit(int limit){
-	setLimit( limit );
+	set_limit( limit );
 	return this;
 }
 
 Query *Query::create(){
 	Query *Query = SQB::from( table );
-	Query->setQueryType(
+	Query->set_query_type(
 		QueryType::eINSERT );
 
 	return Query;
 }
 
-Query *Query::findOne(){
-	setLimit( 1 );
-	setConnectionObject( getDB() );
+Query *Query::find_one(){
+	set_limit( 1 );
+	set_connection_object( get_db() );
 
-	return findSingleRecord();
+	return find_single_record();
 }
-vector<Query*> Query::findMany(){
-	setConnectionObject( getDB() );
+vector<Query*> Query::find_many(){
+	set_connection_object( get_db() );
 
-	return findRecords();
+	return find_records();
 }
 
-string Query::findMin(const string &col){
-	setConnectionObject( getDB() );
+string Query::find_min(const string &col){
+	set_connection_object( get_db() );
 
 	results.clear();
-	addResultColumn(
+	add_result_column(
 		"MIN(" + col + ")" );
 
-	return findSingleValue();
+	return find_single_value();
 }
-string Query::findMax(const string &col){
-	setConnectionObject( getDB() );
+string Query::find_max(const string &col){
+	set_connection_object( get_db() );
 
 	results.clear();
-	addResultColumn(
+	add_result_column(
 		"MAX(" + col + ")" );
 
-	return findSingleValue();
+	return find_single_value();
 }
-string Query::findAvg(const string &col){
-	setConnectionObject( getDB() );
+string Query::find_avg(const string &col){
+	set_connection_object( get_db() );
 
 	results.clear();
-	addResultColumn(
+	add_result_column(
 		"AVG(" + col + ")" );
 
-	return findSingleValue();
+	return find_single_value();
 }
-string Query::findSum(const string &col){
-	setConnectionObject( getDB() );
+string Query::find_sum(const string &col){
+	set_connection_object( get_db() );
 
 	results.clear();
-	addResultColumn(
+	add_result_column(
 		"SUM(" + col + ")" );
 
-	return findSingleValue();
+	return find_single_value();
 }
 
 bool Query::remove(){
-	setConnectionObject( getDB() );
+	set_connection_object( get_db() );
 
-	return removeRecords();
+	return remove_records();
 }
 bool Query::save(){
-	setConnectionObject( getDB() );
+	set_connection_object( get_db() );
 
 	bool ret;
 
 	/* UPDATE Query */
-	if( queryType == QueryType::eUPDATE )
-		ret = updateRecords();
+	if( query_type == QueryType::eUPDATE )
+		ret = update_records();
 	/* INSERT Query */
 	else
-		ret = insertRecord();
+		ret = insert_record();
 
-	cleanDirtyFields();
+	clean_dirty_fields();
 
 	return ret;
 }
 
 void Query::set(const string &key, const string &value){
-	dirtField( key );
+	dirt_field( key );
 	fields[key] = value;
 }
 string &Query::get(const string &key){
 	return fields[key];
 }
 string &Query::operator[](const std::string &key){
-	/* operator[]ë¡œ ì ‘ê·¼ëœ ê°’ë“¤ì€ ìˆ˜ì • ì—¬ë¶€ë¥¼ ì•Œ ìˆ˜ ì—†ìœ¼ë¯€ë¡œ
-	   ë¬´ì¡°ê±´ dirtì‹œí‚¨ë‹¤, ë‚˜ì¤‘ì— ìˆ˜ì • */
-	dirtField( key );
+	/* operator[]·Î Á¢±ÙµÈ °ªµéÀº ¼öÁ¤ ¿©ºÎ¸¦ ¾Ë ¼ö ¾øÀ¸¹Ç·Î
+	   ¹«Á¶°Ç dirt½ÃÅ²´Ù, ³ªÁß¿¡ ¼öÁ¤ */
+	dirt_field( key );
 	return fields[key];
 }
 

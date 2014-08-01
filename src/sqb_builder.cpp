@@ -19,19 +19,19 @@ string join(vector<string> vec, string delim){
 		(*vec.rbegin());
 }
 
-string Query::buildResultColumns(){
+string Query::build_result_columns(){
 	if( results.empty() )
 		return "*";
 	else
 		return join( results, "," );
 }
-string Query::buildConditions(){
+string Query::build_conditions(){
 	string query = "WHERE ";
 
 	return query +
 		join( conditions, " AND " );
 }
-string Query::buildFieldKeys(){
+string Query::build_field_keys(){
 	string keys;
 	auto it = fields.begin();
 
@@ -44,7 +44,7 @@ string Query::buildFieldKeys(){
 
 	return keys;
 }
-string Query::buildFieldValues(){
+string Query::build_field_values(){
 	string values;
 	auto it = fields.begin();
 
@@ -58,96 +58,96 @@ string Query::buildFieldValues(){
 
 	return values;
 }
-string Query::buildChanges(){
+string Query::build_changes(){
 	string changes;
 
-	if( dirtyFields.empty() )
+	if( dirty_fields.empty() )
 		return "";
 
-	for(auto fieldName : dirtyFields){
+	for(auto field_name : dirty_fields){
 		changes +=
-			fieldName + "=\'" +
-			escape(get(fieldName)) + "\',";
+			field_name + "=\'" +
+			escape(get(field_name)) + "\',";
 	}
 	changes.pop_back();
 
 	return changes;
 }
 
-string Query::buildFrom(){
+string Query::build_from(){
 	string query = "FROM ";
 
 	query += table;
 	
 	return query;
 }
-string Query::buildInto(){
+string Query::build_into(){
 	string query = "INTO ";
 
 	query += table;
 	
 	return query;
 }
-string Query::buildLimit(){
+string Query::build_limit(){
 	string query = "LIMIT ";
 	char buf[12];
 
-	if( nLimit == 0 )
+	if( n_limit == 0 )
 		return "";
 
-	sprintf( buf, "%d", nLimit );
+	sprintf( buf, "%d", n_limit );
 	query += string(buf);
 	
 	return query;
 }
 
-string Query::buildSelect(){
+string Query::build_select(){
 	string query = "SELECT ";
 	query +=
-		buildResultColumns() + " " +
-		buildFrom() + " " +
-		buildConditions() + " " +
-		buildLimit();
+		build_result_columns() + " " +
+		build_from() + " " +
+		build_conditions() + " " +
+		build_limit();
 
 	return query;
 }
-string Query::buildUpdate(){
+string Query::build_update(){
 	string query = "UPDATE ";
 
 	query +=
 		table + " SET " +
-		buildChanges() + " " +
-		buildConditions();
+		build_changes() + " " +
+		build_conditions();
 	return query;
 }
-string Query::buildDelete(){
+string Query::build_delete(){
 	string query = "DELETE ";
 
 	query +=
-		buildFrom() + " " +
-		buildConditions();
+		build_from() + " " +
+		build_conditions();
 	return query;
 }
-string Query::buildInsert(){
+string Query::build_insert(){
 	string query = "INSERT ";
 	query +=
-		buildInto() + " (" +
-		buildFieldKeys() + ") VALUES (" +
-		buildFieldValues() +")";
+		build_into() + " (" +
+		build_field_keys() + ") VALUES (" +
+		build_field_values() +")";
 
 	return query;
 }
 
 string Query::build(){
-	switch( queryType ){
+	switch( query_type ){
 	case eSELECT:
-		return buildSelect();
+		return build_select();
 	case eUPDATE:
-		return buildUpdate();
+		return build_update();
 	case eDELETE:
-		return buildDelete();
+		return build_delete();
 	case eINSERT:
-		return buildInsert();
+		return build_insert();
 	}
 }
 

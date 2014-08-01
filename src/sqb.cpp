@@ -21,14 +21,14 @@ void quit(){
 	quitPool();
 }
 
-string getLastErrorMessage(){
-	MYSQL *mysql = getDB();
+string get_last_error(){
+	MYSQL *mysql = get_db();
 
 	return mysql_error( mysql );
 }
-int rawQuery(const std::string &query){
+int raw_query(const std::string &query){
 	return mysql_query(
-		getDB(), query.c_str() );
+		get_db(), query.c_str() );
 }
 
 string escape(const string &str){

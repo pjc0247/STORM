@@ -1,70 +1,76 @@
 #include "Sqb.h"
 
+#include <assert.h>
+
 using namespace std;
 
 namespace SQB{
 
 Query::Query() :
-	nLimit(0),
-	queryType(0){
+	n_limit(0),
+	query_type(0){
 }
 Query::~Query(){
 }
 
-void Query::setNoDirt(const string &key, const string &value){
+void Query::set_with_no_dirt(const string &key, const string &value){
 	fields[key] = value;
 }
-void Query::setConnectionObject(MYSQL *_mysql){
+void Query::set_connection_object(MYSQL *_mysql){
 	mysql = _mysql;
 }
 
-void Query::setQueryType(int _queryType){
-	queryType = _queryType;
+void Query::set_query_type(int _query_type){
+	query_type = _query_type;
 }
-void Query::setTable(const string &_table){
+void Query::set_table(const string &_table){
 	table = _table;
 }
-void Query::setLimit(int _limit){
-	nLimit = _limit;
+void Query::set_limit(int _limit){
+	n_limit = _limit;
 }
 
-void Query::addResultColumn(const string &col){
+void Query::add_result_column(const string &col){
 	results.push_back( col );
 }
-void Query::addCondition(
+void Query::add_condition(
 	const string &col, const string &op, const string &value){
 
 	conditions.push_back(
 		col + " " + op + " \'" +
 		escape(value) + "\'" );
 }
-void Query::addCondition(
+void Query::add_condition(
 	const string &query){
 
 	conditions.push_back( query );
 }
 
 int Query::query(const std::string &query){
+	assert( currupted == false );
+
 	int result = mysql_query(
 		mysql, query.c_str() );
 
+	currupted = true;
+
 	return result;
 }
-MYSQL_RES *Query::storeResult(){
+MYSQL_RES *Query::store_result(){
 	MYSQL_RES *result = 
 		mysql_store_result( mysql );
 
 	return result;
 }
-void Query::freeResult(MYSQL_RES *mysql){
+void Query::free_result(MYSQL_RES *mysql){
 	mysql_free_result( mysql );
 }
-vector<string> Query::fetchFields(MYSQL_RES *result){
+vector<string> Query::fetch_fields(MYSQL_RES *result){
 	vector<string> fields;
-	int nField =
+	int n_field =
 		mysql_num_fields( result );
 
-	for(int i=0;i<nField;i++) {
+	for(int i=0;i<n_field;i++) {
 		MYSQL_FIELD *field =
 			mysql_fetch_field( result );
 		
@@ -74,46 +80,46 @@ vector<string> Query::fetchFields(MYSQL_RES *result){
 
 	return fields;
 }
-vector<MYSQL_ROW> Query::fetchRows(MYSQL_RES *result){
+vector<MYSQL_ROW> Query::fetch_rows(MYSQL_RES *result){
 	vector<MYSQL_ROW> rows;
-	int nRow =
+	int n_row =
 		mysql_num_rows( result );
 	
-	for(int i=0;i<nRow;i++) {
+	for(int i=0;i<n_row;i++) {
 		MYSQL_ROW row = 
-			fetchNextRow( result );
+			fetch_next_row( result );
 
 		rows.push_back( row );
 	}
 
 	return rows;
 }
-MYSQL_ROW Query::fetchNextRow(MYSQL_RES *result){
+MYSQL_ROW Query::fetch_next_row(MYSQL_RES *result){
 	MYSQL_ROW row =
 		mysql_fetch_row( result );
 	
 	return row;
 }
 
-void Query::dirtField(const string &fieldName){
-	dirtyFields.push_back( fieldName );
+void Query::dirt_field(const string &field_name){
+	dirty_fields.push_back( field_name );
 }
-void Query::cleanDirtyFields(){
-	dirtyFields.clear();
+void Query::clean_dirty_fields(){
+	dirty_fields.clear();
 }
 
-string Query::findSingleValue(){
-	string sql = buildSelect();
+string Query::find_single_value(){
+	string sql = build_select();
 
 	if( query( sql ))
 		return "";
 
-	MYSQL_RES *result = storeResult();
+	MYSQL_RES *result = store_result();
 	if( result == NULL )
 		return "";
 
 	MYSQL_ROW row =
-		fetchNextRow( result );
+		fetch_next_row( result );
 	if( row == NULL )
 		return "";
 	
@@ -121,62 +127,64 @@ string Query::findSingleValue(){
 
 	return row[0];
 }
-Query *Query::findSingleRecord(){
-	string sql = buildSelect();
+Query *Query::find_single_record(){
+	string sql = build_select();
 
 	if( query( sql ))
 		return NULL;
 
-	MYSQL_RES *result = storeResult();
+	MYSQL_RES *result = store_result();
 	if( result == NULL )
 		return NULL;
 
 	MYSQL_ROW row =
-		fetchNextRow( result );
+		fetch_next_row( result );
 	if( row == NULL )
 		return NULL;
 
 	SQB::Query *obj = SQB::from( table );
 	auto fields =
-		fetchFields( result );
+		fetch_fields( result );
 
 	for(int i=0;i<fields.size();i++)
-		obj->setNoDirt( fields[i], row[i] );
+		obj->set_with_no_dirt( fields[i], row[i] );
 
-	/* ë‚˜ì¤‘ì— ì´ ë ˆì½”ë“œë¥¼ ì‹ë³„í•˜ê¸° ìœ„í•´ */
+	/* ³ªÁß¿¡ ÀÌ ·¹ÄÚµå¸¦ ½Äº°ÇÏ±â À§ÇØ */
 	obj->where("id", obj->get("id") );
-	obj->setQueryType(
+	obj->set_query_type(
 		QueryType::eUPDATE );
 	
 	mysql_free_result( result );
 
 	return obj;
 }
-vector<Query*> Query::findRecords(){
+vector<Query*> Query::find_records(){
 	vector<Query*> results;
-	string sql = buildSelect();
+	string sql = build_select();
 
 	if( query( sql ))
 		return results;
 
-	MYSQL_RES *result = storeResult();
+	MYSQL_RES *result = store_result();
 	if( result == NULL )
 		return results;
 
 	auto fields =
-		fetchFields( result );
+		fetch_fields( result );
 	auto rows =
-		fetchRows( result );
+		fetch_rows( result );
+
+	printf("RS %d\n", rows.size());
 
 	for(int i=0;i<rows.size();i++){
 		SQB::Query *obj = SQB::from( table );
 
 		for(int j=0;j<fields.size();j++)
-			obj->setNoDirt( fields[j], rows[i][j] );
+			obj->set_with_no_dirt( fields[j], rows[i][j] );
 
-		/* ë‚˜ì¤‘ì— ì´ ë ˆì½”ë“œë¥¼ ì‹ë³„í•˜ê¸° ìœ„í•´ */
+		/* ³ªÁß¿¡ ÀÌ ·¹ÄÚµå¸¦ ½Äº°ÇÏ±â À§ÇØ */
 		obj->where("id", obj->get("id") );
-		obj->setQueryType(
+		obj->set_query_type(
 			QueryType::eUPDATE );
 
 		results.push_back( obj );
@@ -186,22 +194,22 @@ vector<Query*> Query::findRecords(){
 
 	return results;
 }
-bool Query::updateRecords(){
-	string sql = buildUpdate();
+bool Query::update_records(){
+	string sql = build_update();
 
 	if( query( sql ))
 		return false;
 	return true;
 }
-bool Query::insertRecord(){
-	string sql = buildInsert();
+bool Query::insert_record(){
+	string sql = build_insert();
 
 	if( query( sql ))
 		return false;
 	return true;
 }
-bool Query::removeRecords(){
-	string sql = buildDelete();
+bool Query::remove_records(){
+	string sql = build_delete();
 
 	if( query( sql ))
 		return false;

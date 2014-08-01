@@ -17,23 +17,23 @@ namespace SQB{
 	void quit();
 
 	/* ERROR API */
-	std::string getLastErrorMessage();
+	std::string get_last_error();
 
 	/* CONFIGURATION API */
 	void configure(
 		const std::string &key, const std::string &value);
-	std::string &getConfig(
+	std::string &get_config(
 		const std::string &key);
 
 	/* TRANSACTION API */
-	bool tryBegin();
+	bool try_begin();
 	void begin();
 	void commit();
 	void rollback();
 
 	/* RAW API */
-	MYSQL *getDB();
-	int rawQuery(const std::string &query);
+	MYSQL *get_db();
+	int raw_query(const std::string &query);
 
 	/* SELECT TABLE */
 	Query *from(const std::string &table);
@@ -46,15 +46,15 @@ namespace SQB{
 
 	public:
 		Query *where(const std::string &col, const std::string &value);
-		Query *whereEqual(const std::string &col, const std::string &value);
-		Query *whereNotEqual(const std::string &col, const std::string &value);
-		Query *whereLike(const std::string &col, const std::string &value);
-		Query *whereNotLike(const std::string &col, const std::string &value);
-		Query *whereGt(const std::string &col, const std::string &value);
-		Query *whereGte(const std::string &col, const std::string &value);
-		Query *whereLt(const std::string &col, const std::string &value);
-		Query *whereLte(const std::string &col, const std::string &value);
-		Query *whereRaw(const std::string &query);
+		Query *where_equal(const std::string &col, const std::string &value);
+		Query *where_not_equal(const std::string &col, const std::string &value);
+		Query *where_like(const std::string &col, const std::string &value);
+		Query *where_not_like(const std::string &col, const std::string &value);
+		Query *where_gt(const std::string &col, const std::string &value);
+		Query *where_gte(const std::string &col, const std::string &value);
+		Query *where_lt(const std::string &col, const std::string &value);
+		Query *where_lte(const std::string &col, const std::string &value);
+		Query *where_raw(const std::string &query);
 
 		Query *select(const std::string &col);
 		Query *select(int count, ...);
@@ -64,13 +64,13 @@ namespace SQB{
 		void set(const std::string &key, const std::string &value);
 		std::string &get(const std::string &key);
 
-		Query *findOne();
-		std::vector<Query*> findMany();
+		Query *find_one();
+		std::vector<Query*> find_many();
 
-		std::string findMin(const std::string &col);
-		std::string findMax(const std::string &col);
-		std::string findAvg(const std::string &col);
-		std::string findSum(const std::string &col);
+		std::string find_min(const std::string &col);
+		std::string find_max(const std::string &col);
+		std::string find_avg(const std::string &col);
+		std::string find_sum(const std::string &col);
 
 		Query *create();
 		bool save();
@@ -85,53 +85,53 @@ namespace SQB{
 		Query();
 		virtual ~Query();
 
-		void setConnectionObject(MYSQL *mysql);
+		void set_connection_object(MYSQL *mysql);
 
-		void setNoDirt(const std::string &key, const std::string &value);
+		void set_with_no_dirt(const std::string &key, const std::string &value);
 
-		void setQueryType(int queryType);
-		void setTable(const std::string &table);
-		void setLimit(int limit);
+		void set_query_type(int query_type);
+		void set_table(const std::string &table);
+		void set_limit(int limit);
 
-		void addResultColumn(const std::string &col);
-		void addCondition(
+		void add_result_column(const std::string &col);
+		void add_condition(
 			const std::string &col, const std::string &op, const std::string &value);
-		void addCondition(const std::string &condition);
+		void add_condition(const std::string &condition);
 
-		std::string buildResultColumns();
-		std::string buildConditions();
-		std::string buildFieldKeys();
-		std::string buildFieldValues();
-		std::string buildChanges();
+		std::string build_result_columns();
+		std::string build_conditions();
+		std::string build_field_keys();
+		std::string build_field_values();
+		std::string build_changes();
 
-		std::string buildFrom();
-		std::string buildInto();
+		std::string build_from();
+		std::string build_into();
 
-		std::string buildLimit();
+		std::string build_limit();
 	
-		std::string buildSelect();
-		std::string buildUpdate();
-		std::string buildDelete();
-		std::string buildInsert();
+		std::string build_select();
+		std::string build_update();
+		std::string build_delete();
+		std::string build_insert();
 
-		void dirtField(const std::string &fieldName);
-		void cleanDirtyFields();
+		void dirt_field(const std::string &field_name);
+		void clean_dirty_fields();
 
 		/* SELECT, UPDATE, INSERT, DELETE backends */
-		std::string findSingleValue();
-		Query *findSingleRecord();
-		std::vector<Query*> findRecords();
-		bool updateRecords();
-		bool insertRecord();
-		bool removeRecords();
+		std::string find_single_value();
+		Query *find_single_record();
+		std::vector<Query*> find_records();
+		bool update_records();
+		bool insert_record();
+		bool remove_records();
 
 		/* MYSQL Wrapping */
 		int query(const std::string &query);
-		MYSQL_RES *storeResult();
-		void freeResult(MYSQL_RES *mysql);
-		std::vector<std::string> fetchFields(MYSQL_RES *result);
-		std::vector<MYSQL_ROW> fetchRows(MYSQL_RES *result);
-		MYSQL_ROW fetchNextRow(MYSQL_RES *result);
+		MYSQL_RES *store_result();
+		void free_result(MYSQL_RES *mysql);
+		std::vector<std::string> fetch_fields(MYSQL_RES *result);
+		std::vector<MYSQL_ROW> fetch_rows(MYSQL_RES *result);
+		MYSQL_ROW fetch_next_row(MYSQL_RES *result);
 
 	protected:
 		enum QueryType{
@@ -142,15 +142,16 @@ namespace SQB{
 		};
 
 	protected:
-		int queryType;
+		int query_type;
 
 		std::string table;
 		std::vector<std::string> conditions;
 		std::vector<std::string> results;
 		std::map<std::string,std::string> fields;
-		std::vector<std::string> dirtyFields;
+		std::vector<std::string> dirty_fields;
 
-		int nLimit;
+		int n_limit;
+		bool currupted;
 
 		MYSQL *mysql;
 	};
