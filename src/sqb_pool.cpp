@@ -2,7 +2,6 @@
 
 #include <thread>
 #include <concurrent_queue.h>
-#include <concurrent_unordered_map.h>
 
 #include <mysql.h>
 
@@ -12,21 +11,21 @@ using namespace concurrency;
 
 namespace SQB{
 
-static concurrent_queue<MYSQL*> conns;
-static concurrent_unordered_map<thread::id, MYSQL*> tls;
+concurrent_queue<MYSQL*> conns;
+_declspec(thread) MYSQL *local_db = nullptr;
 
 bool initPool(){
-	string host = getConfig("host");
-	string user = getConfig("user");
-	string passwd = getConfig("password");
-	string db = getConfig("db");
+	string host = get_config("host");
+	string user = get_config("user");
+	string passwd = get_config("password");
+	string db = get_config("db");
 	int port;
 	int poolSize;
 
 	sscanf(
-		getConfig("pool_size").c_str(), "%d", &poolSize );
+		get_config("pool_size").c_str(), "%d", &poolSize );
 	sscanf(
-		getConfig("port").c_str(), "%d", &port );
+		get_config("port").c_str(), "%d", &port );
 
 	for(int i=0;i<poolSize;i++){
 		MYSQL *mysql = mysql_init(NULL);
@@ -57,18 +56,12 @@ void quitPool(){
 	}
 }
 
-MYSQL *localGetDB(){
-	return tls[ this_thread::get_id() ];
-}
-void localSetDB(MYSQL *mysql){
-	tls[ this_thread::get_id() ] = mysql;
-}
-void returnDB(MYSQL *mysql){
-	localSetDB( NULL );
+void return_db(MYSQL *mysql){
+	local_db = NULL;
 	conns.push( mysql );
 }
 
-bool tryBegin(){
+bool try_begin(){
 	MYSQL *mysql;
 
 	if( conns.empty() )
@@ -76,7 +69,7 @@ bool tryBegin(){
 	if( !conns.try_pop( mysql ) )
 		return false;
 	else{
-		localSetDB( mysql );
+		local_db = mysql;
 		mysql_query( mysql, "BEGIN" );
 
 		return true;
@@ -95,31 +88,26 @@ void begin(){
 			milliseconds(10) );
 	}
 
-	localSetDB( mysql );
+	local_db = mysql;
 	mysql_query( mysql, "BEGIN" );
 }
 void commit(){
-	MYSQL *mysql = localGetDB();
+	MYSQL *mysql = local_db;
 
 	mysql_query( mysql, "COMMIT" );
 
-	returnDB( mysql );
+	return_db( mysql );
 }
 void rollback(){
-	MYSQL *mysql = localGetDB();
+	MYSQL *mysql = local_db;
 
 	mysql_query( mysql, "ROLLBACK" );
 
-	returnDB( mysql );
+	return_db( mysql );
 }
 
-MYSQL *getDB(){
-	auto pair = tls.find( this_thread::get_id() );
-
-	if( pair == tls.end() )
-		return NULL;
-	else
-		return pair->second;
+MYSQL *get_db(){
+	return local_db;
 }
 
 }
