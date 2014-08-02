@@ -1,5 +1,5 @@
-#ifndef _SQB_H
-#define _SQB_H
+#ifndef _STORM_H
+#define _STORM_H
 
 #include <mysql.h>
 
@@ -7,10 +7,7 @@
 #include <vector>
 #include <map>
 
-/*
-	SQB / Simple MYSQL Query Builder
-*/
-namespace SQB{
+namespace ORM{
 	class Query;
 
 	bool init();
@@ -157,4 +154,4 @@ namespace SQB{
 	};
 };
 
-#endif //_SQB_H
+#endif //_STORM_H
