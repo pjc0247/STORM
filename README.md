@@ -1,4 +1,4 @@
-SQB
+STORM
 ===
 
 idiorm짝퉁
@@ -8,20 +8,20 @@ __테이블마다 id라는 이름의 UNIQUE 필드가 있어야 사용 가능__
 Configuration
 ----
 ```C++
-SQB::configure("host", "localhost");
-SQB::configure("user", "pjc");
-SQB::configure("password", "1234");
-SQB::configure("db", "dbname");
+ORM::configure("host", "localhost");
+ORM::configure("user", "pjc");
+ORM::configure("password", "1234");
+ORM::configure("db", "dbname");
 
-SQB::init();
+ORM::init();
 
-SQB::quit();
+ORM::quit();
 ```
 
 SELECT Query
 ----
 ```C++
-SQB::Query *query = SQB::from("test");
+auto query = ORM::from("test");
 
 auto result = query
   ->where("id", "foo")
@@ -43,7 +43,7 @@ INSERT Query
 
 ```C++
 auto query =
-  SQB::from("test")->create();
+  ORM::from("test")->create();
 
 query->set("id", "pjc");
 query->set("nick", "anz");
@@ -58,7 +58,7 @@ UPDATE Query
 
 ```C++
 auto query =
-  SQB::from("test")
+  ORM::from("test")
     ->where("id", "pjc0247")
     ->find_one();
 
@@ -72,13 +72,13 @@ DELETE Query
 
 ```C++
 auto query =
-  SQB::from("test")
+  ORM::from("test")
     ->where("id", "pjc0247")
     ->find_one();
 query->remove();
 
 auto query = 
-  SQB::from("test")
+  ORM::from("test")
     ->where("level", "1")
     ->remove();
 ```
@@ -86,12 +86,12 @@ auto query =
 TRANSACTION
 ----
 ```C++
-SQB::begin();
+ORM::begin();
   // do some work
-SQB::commit();
+ORM::commit();
 
-if( SQB::try_begin() ){
+if( ORM::try_begin() ){
     // do some work
-  SQB::rollback();
+  ORM::rollback();
 }
 ```
