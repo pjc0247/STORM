@@ -1,8 +1,8 @@
-#include "Sqb.h"
+#include "storm.h"
 
 using namespace std;
 
-namespace SQB{
+namespace ORM{
 
 string join(vector<string> vec, string delim){
 	string result;
