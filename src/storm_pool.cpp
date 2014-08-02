@@ -1,4 +1,4 @@
-#include "Sqb.h"
+#include "storm.h"
 
 #include <thread>
 #include <concurrent_queue.h>
@@ -9,7 +9,7 @@ using namespace std;
 using namespace chrono;
 using namespace concurrency;
 
-namespace SQB{
+namespace ORM{
 
 concurrent_queue<MYSQL*> conns;
 _declspec(thread) MYSQL *local_db = nullptr;
