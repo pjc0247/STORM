@@ -1,10 +1,10 @@
-#include "Sqb.h"
+#include "storm.h"
 
 #include <assert.h>
 
 using namespace std;
 
-namespace SQB{
+namespace ORM{
 
 Query::Query() :
 	n_limit(0),
@@ -142,14 +142,14 @@ Query *Query::find_single_record(){
 	if( row == NULL )
 		return NULL;
 
-	SQB::Query *obj = SQB::from( table );
+	ORM::Query *obj = ORM::from( table );
 	auto fields =
 		fetch_fields( result );
 
 	for(int i=0;i<fields.size();i++)
 		obj->set_with_no_dirt( fields[i], row[i] );
 
-	/* ³ªÁß¿¡ ÀÌ ·¹ÄÚµå¸¦ ½Äº°ÇÏ±â À§ÇØ */
+	/* ë‚˜ì¤‘ì— ì´ ë ˆì½”ë“œë¥¼ ì‹ë³„í•˜ê¸° ìœ„í•´ */
 	obj->where("id", obj->get("id") );
 	obj->set_query_type(
 		QueryType::eUPDATE );
@@ -174,15 +174,13 @@ vector<Query*> Query::find_records(){
 	auto rows =
 		fetch_rows( result );
 
-	printf("RS %d\n", rows.size());
-
 	for(int i=0;i<rows.size();i++){
-		SQB::Query *obj = SQB::from( table );
+		ORM::Query *obj = ORM::from( table );
 
 		for(int j=0;j<fields.size();j++)
 			obj->set_with_no_dirt( fields[j], rows[i][j] );
 
-		/* ³ªÁß¿¡ ÀÌ ·¹ÄÚµå¸¦ ½Äº°ÇÏ±â À§ÇØ */
+		/* ë‚˜ì¤‘ì— ì´ ë ˆì½”ë“œë¥¼ ì‹ë³„í•˜ê¸° ìœ„í•´ */
 		obj->where("id", obj->get("id") );
 		obj->set_query_type(
 			QueryType::eUPDATE );
