@@ -1,13 +1,13 @@
-#include "Sqb.h"
+#include "storm.h"
 
 #include <cstdarg>
 
 using namespace std;
 
-namespace SQB{
+namespace ORM{
 
 Query *from(const string &table){
-	Query *Query = new SQB::Query();
+	Query *Query = new ORM::Query();
 		
 		Query->set_table( table );
 	return Query;
@@ -77,7 +77,7 @@ Query *Query::limit(int limit){
 }
 
 Query *Query::create(){
-	Query *Query = SQB::from( table );
+	Query *Query = ORM::from( table );
 	Query->set_query_type(
 		QueryType::eINSERT );
 
@@ -163,8 +163,8 @@ string &Query::get(const string &key){
 	return fields[key];
 }
 string &Query::operator[](const std::string &key){
-	/* operator[]·Î Á¢±ÙµÈ °ªµéÀº ¼öÁ¤ ¿©ºÎ¸¦ ¾Ë ¼ö ¾øÀ¸¹Ç·Î
-	   ¹«Á¶°Ç dirt½ÃÅ²´Ù, ³ªÁß¿¡ ¼öÁ¤ */
+	/* operator[]ë¡œ ì ‘ê·¼ëœ ê°’ë“¤ì€ ìˆ˜ì • ì—¬ë¶€ë¥¼ ì•Œ ìˆ˜ ì—†ìœ¼ë¯€ë¡œ
+	   ë¬´ì¡°ê±´ dirtì‹œí‚¨ë‹¤, ë‚˜ì¤‘ì— ìˆ˜ì • */
 	dirt_field( key );
 	return fields[key];
 }
