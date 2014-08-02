@@ -1,13 +1,13 @@
-#include "Sqb.h"
+#include "storm.h"
 
 using namespace std;
 
-namespace SQB{
+namespace ORM{
 
-/* from sqb_config.cpp */
+/* from storm_config.cpp */
 bool initConfig();
 
-/* from sqb_pool.cpp */
+/* from storm_pool.cpp */
 bool initPool();
 void quitPool();
 
