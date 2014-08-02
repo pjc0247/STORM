@@ -1,8 +1,8 @@
-#include "Sqb.h"
+#include "storm.h"
 
 using namespace std;
 
-namespace SQB{
+namespace ORM{
 
 map<string,string> configs;
 
