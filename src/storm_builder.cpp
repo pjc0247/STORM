@@ -73,6 +73,22 @@ string Query::build_changes(){
 
 	return changes;
 }
+string Query::build_order_by(){
+	string orders = "ORDER BY ";
+
+	orders +=
+		join( order_by, "," );
+
+	return orders;
+}
+string Query::build_group_by(){
+	string groups = "GROUP BY ";
+
+	groups +=
+		join( group_by, "," );
+
+	return groups;
+}
 
 string Query::build_from(){
 	string query = "FROM ";
@@ -107,6 +123,7 @@ string Query::build_select(){
 		build_result_columns() + " " +
 		build_from() + " " +
 		build_conditions() + " " +
+		build_order_by() + " " +
 		build_limit();
 
 	return query;

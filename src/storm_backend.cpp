@@ -8,7 +8,8 @@ namespace ORM{
 
 Query::Query() :
 	n_limit(0),
-	query_type(0){
+	query_type(0),
+	currupted(false){
 }
 Query::~Query(){
 }
@@ -40,10 +41,15 @@ void Query::add_condition(
 		col + " " + op + " \'" +
 		escape(value) + "\'" );
 }
-void Query::add_condition(
-	const string &query){
-
+void Query::add_condition(const string &query){
 	conditions.push_back( query );
+}
+void Query::add_order_by(const string &col, const string &order){
+	order_by.push_back(
+		col + " " + order );
+}
+void Query::add_group_by(const string &col){
+	group_by.push_back( col );
 }
 
 int Query::query(const std::string &query){

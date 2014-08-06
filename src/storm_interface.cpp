@@ -10,53 +10,65 @@ Query *from(const string &table){
 	Query *Query = new ORM::Query();
 		
 		Query->set_table( table );
+
 	return Query;
 }
 
 Query *Query::where(const string &col, const string &value){
 	add_condition( col, "=", value );
+
 	return this;
 }
 Query *Query::where_equal(const string &col, const string &value){
 	add_condition( col, "=", value );
+
 	return this;
 }
 Query *Query::where_not_equal(const string &col, const string &value){
 	add_condition( col, "!=", value );
+
 	return this;
 }
 Query *Query::where_like(const string &col, const string &value){
 	add_condition( col, "LIKE", value );
+
 	return this;
 }
 Query *Query::where_not_like(const string &col, const string &value){
 	add_condition( col, "NOT LIKE", value );
+
 	return this;
 }
 Query *Query::where_gt(const string &col, const string &value){
 	add_condition( col, ">", value );
+
 	return this;
 }
 Query *Query::where_gte(const string &col, const string &value){
 	add_condition( col, ">=", value );
+
 	return this;
 }
 Query *Query::where_lt(const string &col, const string &value){
 	add_condition( col, "<", value );
+
 	return this;
 }
 Query *Query::where_lte(const string &col, const string &value){
 	add_condition( col, "<=", value );
+
 	return this;
 }
 
 Query *Query::where_raw(const string &query){
 	add_condition( query );
+
 	return this;
 }
 
 Query *Query::select(const string &col){
 	add_result_column( col );
+
 	return this;
 }
 Query *Query::select(int count, ...){
@@ -68,11 +80,29 @@ Query *Query::select(int count, ...){
 				va_arg( va, const string ));
 		}
 	va_end( va );
+
 	return this;
 }
 
 Query *Query::limit(int limit){
 	set_limit( limit );
+
+	return this;
+}
+
+Query *Query::order_by_expr(const string &expr){
+	add_order_by( expr, "" );
+
+	return this;
+}
+Query *Query::order_by_asc(const string &col){
+	add_order_by( col, "ASC" );
+
+	return this;
+}
+Query *Query::order_by_desc(const string &col){
+	add_order_by( col, "DESC" );
+
 	return this;
 }
 
@@ -166,6 +196,7 @@ string &Query::operator[](const std::string &key){
 	/* operator[]로 접근된 값들은 수정 여부를 알 수 없으므로
 	   무조건 dirt시킨다, 나중에 수정 */
 	dirt_field( key );
+
 	return fields[key];
 }
 

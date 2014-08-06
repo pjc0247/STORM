@@ -58,6 +58,10 @@ namespace ORM{
 
 		Query *limit(int limit);
 
+		Query *order_by_expr(const std::string &expr);
+		Query *order_by_asc(const std::string &col);
+		Query *order_by_desc(const std::string &col);
+
 		void set(const std::string &key, const std::string &value);
 		std::string &get(const std::string &key);
 
@@ -94,12 +98,16 @@ namespace ORM{
 		void add_condition(
 			const std::string &col, const std::string &op, const std::string &value);
 		void add_condition(const std::string &condition);
+		void add_order_by(const std::string &col, const std::string &order);
+		void add_group_by(const std::string &col);
 
 		std::string build_result_columns();
 		std::string build_conditions();
 		std::string build_field_keys();
 		std::string build_field_values();
 		std::string build_changes();
+		std::string build_order_by();
+		std::string build_group_by();
 
 		std::string build_from();
 		std::string build_into();
@@ -142,10 +150,14 @@ namespace ORM{
 		int query_type;
 
 		std::string table;
+
 		std::vector<std::string> conditions;
 		std::vector<std::string> results;
-		std::map<std::string,std::string> fields;
 		std::vector<std::string> dirty_fields;
+		std::vector<std::string> order_by;
+		std::vector<std::string> group_by;
+
+		std::map<std::string,std::string> fields;
 
 		int n_limit;
 		bool currupted;
