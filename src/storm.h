@@ -31,6 +31,7 @@ namespace ORM{
 	/* RAW API */
 	MYSQL *get_db();
 	int raw_query(const std::string &query);
+	int raw_query(const std::string format, ...);
 
 	/* SELECT TABLE */
 	Query *from(const std::string &table);
